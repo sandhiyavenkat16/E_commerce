@@ -1,0 +1,133 @@
+Microsoft Windows [Version 10.0.26200.7171]
+(c) Microsoft Corporation. All rights reserved.
+
+D:\xampp\mysql\bin>mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 12
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> CREATE OnlineOrderDB;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'OnlineOrderDB' at line 1
+MariaDB [(none)]> use OnlineOrderDB;
+Database changed
+MariaDB [OnlineOrderDB]> db.products.insertMany([{ product_id: "P101",product_name: "Laptop",category: "Electronics",price: 55000, stock: 25, brand: "Dell",ratings: 4.5},{ product_id: "P102", product_name: "Mobile Phone", category: "Electronics", price: 20000, stock: 50, brand: "Samsung", ratings: 4.2}]);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'db.products.insertMany([{ product_id: "P101",product_name: "Laptop",category:...' at line 1
+MariaDB [OnlineOrderDB]> db.products.insertMany([{ product_id: "P101", product_name: "Laptop",category: "Electronics", price: 55000, stock: 25, brand: "Dell", ratings: 4.5}, {product_id: "P102", product_name: "Mobile Phone", category: "Electronics", price: 20000,stock: 50, brand: "Samsung", ratings: 4.2 }]);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'db.products.insertMany([{ product_id: "P101", product_name: "Laptop",category...' at line 1
+MariaDB [OnlineOrderDB]> CREATE DATABASE Week7DB;
+Query OK, 1 row affected (0.001 sec)
+
+MariaDB [OnlineOrderDB]> USE Week7DB;
+Database changed
+MariaDB [Week7DB]> db.products.insertMany([{ product_id: "P101", product_name: "Laptop",category: "Electronics", price: 55000, stock: 25, brand: "Dell", ratings: 4.5}, {product_id: "P102", product_name: "Mobile Phone", category: "Electronics", price: 20000,stock: 50, brand: "Samsung", ratings: 4.2 }]);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'db.products.insertMany([{ product_id: "P101", product_name: "Laptop",category...' at line 1
+MariaDB [Week7DB]> CREATE DATABASE Week7DB;
+ERROR 1007 (HY000): Can't create database 'week7db'; database exists
+MariaDB [Week7DB]> CREATE DATABASE Week7DBS;
+Query OK, 1 row affected (0.001 sec)
+
+MariaDB [Week7DB]> USE Week7DBS;
+Database changed
+MariaDB [Week7DBS]> CREATE TABLE Product ( ProductID VARCHAR(10), ProductName VARCHAR(50), Category VARCHAR(50), Price DECIMAL(10,2), Stock INT, Brand VARCHAR(50),   Ratings DECIMAL(2,1));
+Query OK, 0 rows affected (0.010 sec)
+
+MariaDB [Week7DBS]> INSERT INTO Product VALUES('P101', 'Laptop', 'Electronics', 55000, 25, 'Dell', 4.5),('P102', 'Mobile Phone', 'Electronics', 20000, 50, 'Samsung', 4.2);
+Query OK, 2 rows affected (0.002 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [Week7DBS]> SELECT * FROM Product;
++-----------+--------------+-------------+----------+-------+---------+---------+
+| ProductID | ProductName  | Category    | Price    | Stock | Brand   | Ratings |
++-----------+--------------+-------------+----------+-------+---------+---------+
+| P101      | Laptop       | Electronics | 55000.00 |    25 | Dell    |     4.5 |
+| P102      | Mobile Phone | Electronics | 20000.00 |    50 | Samsung |     4.2 |
++-----------+--------------+-------------+----------+-------+---------+---------+
+2 rows in set (0.000 sec)
+
+MariaDB [Week7DBS]> SELECT * FROM Product WHERE ProductID = 'P101';
++-----------+-------------+-------------+----------+-------+-------+---------+
+| ProductID | ProductName | Category    | Price    | Stock | Brand | Ratings |
++-----------+-------------+-------------+----------+-------+-------+---------+
+| P101      | Laptop      | Electronics | 55000.00 |    25 | Dell  |     4.5 |
++-----------+-------------+-------------+----------+-------+-------+---------+
+1 row in set (0.001 sec)
+
+MariaDB [Week7DBS]> SELECT * FROM Product WHERE Category = 'Electronics';
++-----------+--------------+-------------+----------+-------+---------+---------+
+| ProductID | ProductName  | Category    | Price    | Stock | Brand   | Ratings |
++-----------+--------------+-------------+----------+-------+---------+---------+
+| P101      | Laptop       | Electronics | 55000.00 |    25 | Dell    |     4.5 |
+| P102      | Mobile Phone | Electronics | 20000.00 |    50 | Samsung |     4.2 |
++-----------+--------------+-------------+----------+-------+---------+---------+
+2 rows in set (0.000 sec)
+
+MariaDB [Week7DBS]> SELECT * FROM Product WHERE Price < 30000;
++-----------+--------------+-------------+----------+-------+---------+---------+
+| ProductID | ProductName  | Category    | Price    | Stock | Brand   | Ratings |
++-----------+--------------+-------------+----------+-------+---------+---------+
+| P102      | Mobile Phone | Electronics | 20000.00 |    50 | Samsung |     4.2 |
++-----------+--------------+-------------+----------+-------+---------+---------+
+1 row in set (0.001 sec)
+
+MariaDB [Week7DBS]> SELECT * FROM Product WHERE Stock > 30;
++-----------+--------------+-------------+----------+-------+---------+---------+
+| ProductID | ProductName  | Category    | Price    | Stock | Brand   | Ratings |
++-----------+--------------+-------------+----------+-------+---------+---------+
+| P102      | Mobile Phone | Electronics | 20000.00 |    50 | Samsung |     4.2 |
++-----------+--------------+-------------+----------+-------+---------+---------+
+1 row in set (0.001 sec)
+
+MariaDB [Week7DBS]> UPDATE Product SET Price = 52000 WHERE ProductID = 'P101';
+Query OK, 1 row affected (0.003 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [Week7DBS]> SELECT * FROM Product WHERE ProductID = 'P101';
++-----------+-------------+-------------+----------+-------+-------+---------+
+| ProductID | ProductName | Category    | Price    | Stock | Brand | Ratings |
++-----------+-------------+-------------+----------+-------+-------+---------+
+| P101      | Laptop      | Electronics | 52000.00 |    25 | Dell  |     4.5 |
++-----------+-------------+-------------+----------+-------+-------+---------+
+1 row in set (0.001 sec)
+
+MariaDB [Week7DBS]> UPDATE Product SET Stock = 45 WHERE ProductID = 'P102';
+Query OK, 1 row affected (0.002 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [Week7DBS]> INSERT INTO Product VALUES ('P103', 'Keyboard', 'Computer Accessories',1000, 40, 'Logitech', 4.3);
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [Week7DBS]> SELECT * FROM Product;
++-----------+--------------+----------------------+----------+-------+----------+---------+
+| ProductID | ProductName  | Category             | Price    | Stock | Brand    | Ratings |
++-----------+--------------+----------------------+----------+-------+----------+---------+
+| P101      | Laptop       | Electronics          | 52000.00 |    25 | Dell     |     4.5 |
+| P102      | Mobile Phone | Electronics          | 20000.00 |    45 | Samsung  |     4.2 |
+| P103      | Keyboard     | Computer Accessories |  1000.00 |    40 | Logitech |     4.3 |
++-----------+--------------+----------------------+----------+-------+----------+---------+
+3 rows in set (0.000 sec)
+
+MariaDB [Week7DBS]> DELETE FROM Product WHERE ProductID = 'P103';
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [Week7DBS]> SELECT * FROM Product;
++-----------+--------------+-------------+----------+-------+---------+---------+
+| ProductID | ProductName  | Category    | Price    | Stock | Brand   | Ratings |
++-----------+--------------+-------------+----------+-------+---------+---------+
+| P101      | Laptop       | Electronics | 52000.00 |    25 | Dell    |     4.5 |
+| P102      | Mobile Phone | Electronics | 20000.00 |    45 | Samsung |     4.2 |
++-----------+--------------+-------------+----------+-------+---------+---------+
+2 rows in set (0.000 sec)
+
+MariaDB [Week7DBS]>
+
+
+
+
+
+
+
+
