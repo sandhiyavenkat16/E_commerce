@@ -1,0 +1,136 @@
+Microsoft Windows [Version 10.0.26200.7171]
+(c) Microsoft Corporation. All rights reserved.
+
+D:\xampp\mysql\bin>mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 8
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> CREATE DATABASE OnlineOrderDB;
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [(none)]> USE OnlineOrderDB;
+Database changed
+MariaDB [OnlineOrderDB]> CREATE TABLE Orders (OrderID INT,CustomerID VARCHAR(10),  CustomerName VARCHAR(50),ProductID VARCHAR(10),ProductName VARCHAR(50), Quantity INT);
+Query OK, 0 rows affected (0.014 sec)
+
+MariaDB [OnlineOrderDB]> INSERT INTO Orders VALUES(101, 'C1', 'Ravi', 'P1', 'Laptop', 1),(102, 'C1', 'Ravi', 'P2', 'Mouse', 2),(103, 'C2', 'Arun', 'P1', 'Laptop', 1);
+Query OK, 3 rows affected (0.009 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [OnlineOrderDB]> SELECT * FROM Orders;
++---------+------------+--------------+-----------+-------------+----------+
+| OrderID | CustomerID | CustomerName | ProductID | ProductName | Quantity |
++---------+------------+--------------+-----------+-------------+----------+
+|     101 | C1         | Ravi         | P1        | Laptop      |        1 |
+|     102 | C1         | Ravi         | P2        | Mouse       |        2 |
+|     103 | C2         | Arun         | P1        | Laptop      |        1 |
++---------+------------+--------------+-----------+-------------+----------+
+3 rows in set (0.001 sec)
+
+MariaDB [OnlineOrderDB]> UPDATE Orders SET CustomerName = 'Ravi Kumar'WHERE CustomerID = 'C1';
+Query OK, 2 rows affected (0.004 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+MariaDB [OnlineOrderDB]> SELECT * FROM Orders;
++---------+------------+--------------+-----------+-------------+----------+
+| OrderID | CustomerID | CustomerName | ProductID | ProductName | Quantity |
++---------+------------+--------------+-----------+-------------+----------+
+|     101 | C1         | Ravi Kumar   | P1        | Laptop      |        1 |
+|     102 | C1         | Ravi Kumar   | P2        | Mouse       |        2 |
+|     103 | C2         | Arun         | P1        | Laptop      |        1 |
++---------+------------+--------------+-----------+-------------+----------+
+3 rows in set (0.001 sec)
+
+MariaDB [OnlineOrderDB]> INSERT INTO Orders (CustomerID, CustomerName)VALUES ('C3', 'Suresh');
+Query OK, 1 row affected (0.004 sec)
+
+MariaDB [OnlineOrderDB]> DELETE FROM Orders WHERE OrderID = 103;
+Query OK, 1 row affected (0.003 sec)
+
+MariaDB [OnlineOrderDB]> SELECT * FROM Orders;
++---------+------------+--------------+-----------+-------------+----------+
+| OrderID | CustomerID | CustomerName | ProductID | ProductName | Quantity |
++---------+------------+--------------+-----------+-------------+----------+
+|     101 | C1         | Ravi Kumar   | P1        | Laptop      |        1 |
+|     102 | C1         | Ravi Kumar   | P2        | Mouse       |        2 |
+|    NULL | C3         | Suresh       | NULL      | NULL        |     NULL |
++---------+------------+--------------+-----------+-------------+----------+
+3 rows in set (0.001 sec)
+
+MariaDB [OnlineOrderDB]> CREATE TABLE Customer ( CustomerID VARCHAR(10),CustomerName VARCHAR(50));
+Query OK, 0 rows affected (0.011 sec)
+
+MariaDB [OnlineOrderDB]> CREATE TABLE Product (ProductID VARCHAR(10), ProductName VARCHAR(50));
+Query OK, 0 rows affected (0.018 sec)
+
+MariaDB [OnlineOrderDB]> CREATE TABLE Orders_New ( OrderID INT,CustomerID VARCHAR(10), ProductID VARCHAR(10), Quantity INT);
+Query OK, 0 rows affected (0.013 sec)
+
+MariaDB [OnlineOrderDB]> INSERT INTO Customer VALUES('C1', 'Ravi'),('C2', 'Arun');
+Query OK, 2 rows affected (0.005 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [OnlineOrderDB]> INSERT INTO Product VALUES('P1', 'Laptop'),('P2', 'Mouse');
+Query OK, 2 rows affected (0.005 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [OnlineOrderDB]> INSERT INTO Orders_New VALUES (101, 'C1', 'P1', 1),(102, 'C1', 'P2', 2),(103, 'C2', 'P1', 1);
+Query OK, 3 rows affected (0.006 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [OnlineOrderDB]> SELECT * FROM Customer;
++------------+--------------+
+| CustomerID | CustomerName |
++------------+--------------+
+| C1         | Ravi         |
+| C2         | Arun         |
++------------+--------------+
+2 rows in set (0.001 sec)
+
+MariaDB [OnlineOrderDB]> SELECT * FROM Product;
++-----------+-------------+
+| ProductID | ProductName |
++-----------+-------------+
+| P1        | Laptop      |
+| P2        | Mouse       |
++-----------+-------------+
+2 rows in set (0.001 sec)
+
+MariaDB [OnlineOrderDB]> SELECT * FROM Orders_New;
++---------+------------+-----------+----------+
+| OrderID | CustomerID | ProductID | Quantity |
++---------+------------+-----------+----------+
+|     101 | C1         | P1        |        1 |
+|     102 | C1         | P2        |        2 |
+|     103 | C2         | P1        |        1 |
++---------+------------+-----------+----------+
+3 rows in set (0.001 sec)
+
+MariaDB [OnlineOrderDB]> SELECT  O.OrderID,  C.CustomerName,P.ProductName, O.Quantity FROM Orders_New O JOIN Customer C ON O.CustomerID = C.CustomerID JOIN Product P ON O.ProductID = P.ProductID;
++---------+--------------+-------------+----------+
+| OrderID | CustomerName | ProductName | Quantity |
++---------+--------------+-------------+----------+
+|     101 | Ravi         | Laptop      |        1 |
+|     102 | Ravi         | Mouse       |        2 |
+|     103 | Arun         | Laptop      |        1 |
++---------+--------------+-------------+----------+
+3 rows in set (0.001 sec)
+
+MariaDB [OnlineOrderDB]> SELECT O.OrderID, C.CustomerName,P.ProductName, O.Quantity FROM Orders_New O JOIN Customer C ON O.CustomerID = C.CustomerID JOIN Product P ON O.ProductID = P.ProductID;
++---------+--------------+-------------+----------+
+| OrderID | CustomerName | ProductName | Quantity |
++---------+--------------+-------------+----------+
+|     101 | Ravi         | Laptop      |        1 |
+|     102 | Ravi         | Mouse       |        2 |
+|     103 | Arun         | Laptop      |        1 |
++---------+--------------+-------------+----------+
+3 rows in set (0.001 sec)
+
+MariaDB [OnlineOrderDB]>
+
+
