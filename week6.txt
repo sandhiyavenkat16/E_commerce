@@ -1,0 +1,145 @@
+Microsoft Windows [Version 10.0.26200.7171]
+(c) Microsoft Corporation. All rights reserved.
+
+D:\xampp\mysql\bin>mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 11
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> CREATE DATABASE Week6DB;
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [(none)]> USE Week6DB;
+Database changed
+MariaDB [Week6DB]> CREATE TABLE Customer ( CustomerID VARCHAR(10),CustomerName VARCHAR(50),City VARCHAR(50));
+Query OK, 0 rows affected (0.012 sec)
+
+MariaDB [Week6DB]> CREATE TABLE City (  City VARCHAR(50), State VARCHAR(50));
+Query OK, 0 rows affected (0.013 sec)
+
+MariaDB [Week6DB]> INSERT INTO Customer VALUES('C1', 'Ravi', 'Chennai'),('C2', 'Arun', 'Madurai'),('C3', 'Suresh', 'Chennai');
+Query OK, 3 rows affected (0.004 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [Week6DB]> INSERT INTO City VALUES('Chennai', 'Tamil Nadu'),('Madurai', 'Tamil Nadu');
+Query OK, 2 rows affected (0.003 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [Week6DB]> SELECT * FROM Customer;
++------------+--------------+---------+
+| CustomerID | CustomerName | City    |
++------------+--------------+---------+
+| C1         | Ravi         | Chennai |
+| C2         | Arun         | Madurai |
+| C3         | Suresh       | Chennai |
++------------+--------------+---------+
+3 rows in set (0.001 sec)
+
+MariaDB [Week6DB]> SELECT * FROM City;
++---------+------------+
+| City    | State      |
++---------+------------+
+| Chennai | Tamil Nadu |
+| Madurai | Tamil Nadu |
++---------+------------+
+2 rows in set (0.001 sec)
+
+MariaDB [Week6DB]> SELECT C.CustomerID, C.CustomerName, C.City,CI.State FROM Customer C JOIN City CI ON C.City = CI.City;
++------------+--------------+---------+------------+
+| CustomerID | CustomerName | City    | State      |
++------------+--------------+---------+------------+
+| C1         | Ravi         | Chennai | Tamil Nadu |
+| C2         | Arun         | Madurai | Tamil Nadu |
+| C3         | Suresh       | Chennai | Tamil Nadu |
++------------+--------------+---------+------------+
+3 rows in set (0.001 sec)
+
+MariaDB [Week6DB]> CREATE TABLE Teacher (Teacher VARCHAR(50), Subject VARCHAR(50));
+Query OK, 0 rows affected (0.017 sec)
+
+MariaDB [Week6DB]> CREATE TABLE SubjectRoom ( Subject VARCHAR(50), Room VARCHAR(50));
+Query OK, 0 rows affected (0.011 sec)
+
+MariaDB [Week6DB]> INSERT INTO Teacher VALUES ('John', 'DBMS'),('David', 'C++'),('John', 'Java');
+Query OK, 3 rows affected (0.003 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [Week6DB]> INSERT INTO SubjectRoom VALUES ('DBMS', 'Room101'),('C++', 'Room102'),('Java', 'Room103');
+Query OK, 3 rows affected (0.004 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [Week6DB]> SELECT * FROM Teacher;
++---------+---------+
+| Teacher | Subject |
++---------+---------+
+| John    | DBMS    |
+| David   | C++     |
+| John    | Java    |
++---------+---------+
+3 rows in set (0.001 sec)
+
+MariaDB [Week6DB]> SELECT * FROM SubjectRoom;
++---------+---------+
+| Subject | Room    |
++---------+---------+
+| DBMS    | Room101 |
+| C++     | Room102 |
+| Java    | Room103 |
++---------+---------+
+3 rows in set (0.001 sec)
+
+MariaDB [Week6DB]> SELECT  T.Teacher,T.Subject, S.Room FROM Teacher T JOIN SubjectRoom SON T.Subject = S.Subject;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'T.Subject = S.Subject' at line 1
+MariaDB [Week6DB]> SELECT  T.Teacher,T.Subject, S.Room FROM Teacher T JOIN SubjectRoom S ON T.Subject = S.Subject;
++---------+---------+---------+
+| Teacher | Subject | Room    |
++---------+---------+---------+
+| John    | DBMS    | Room101 |
+| David   | C++     | Room102 |
+| John    | Java    | Room103 |
++---------+---------+---------+
+3 rows in set (0.001 sec)
+
+MariaDB [Week6DB]> CREATE TABLE Orders (  OrderID INT, CustomerID VARCHAR(10),OrderDate DATE);
+Query OK, 0 rows affected (0.012 sec)
+
+MariaDB [Week6DB]> CREATE TABLE Product ( ProductID VARCHAR(10),ProductName VARCHAR(50),  Price DECIMAL(10,2));
+Query OK, 0 rows affected (0.014 sec)
+
+MariaDB [Week6DB]> CREATE TABLE OrderDetails ( OrderID INT, ProductID VARCHAR(10), Quantity INT);
+Query OK, 0 rows affected (0.011 sec)
+
+MariaDB [Week6DB]> INSERT INTO Orders VALUES(101, 'C1', '2026-10-01'),(102, 'C2', '2026-10-02');
+Query OK, 2 rows affected (0.003 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [Week6DB]> INSERT INTO Product VALUES('P1', 'Laptop', 50000),('P2', 'Mouse', 500),('P3', 'Keyboard', 1000);
+Query OK, 3 rows affected (0.005 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [Week6DB]> INSERT INTO OrderDetails VALUES(101, 'P1', 1),(101, 'P2', 2),(102, 'P3', 1);
+Query OK, 3 rows affected (0.004 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [Week6DB]> SELECT O.OrderID,C.CustomerName, P.ProductName, OD.Quantity FROM Orders O JOIN Customer C ON O.CustomerID = C.CustomerID JOIN OrderDetails OD ON O.OrderID = OD.OrderID JOIN Product P ON OD.ProductID = P.ProductID;
++---------+--------------+-------------+----------+
+| OrderID | CustomerName | ProductName | Quantity |
++---------+--------------+-------------+----------+
+|     101 | Ravi         | Laptop      |        1 |
+|     101 | Ravi         | Mouse       |        2 |
+|     102 | Arun         | Keyboard    |        1 |
++---------+--------------+-------------+----------+
+3 rows in set (0.001 sec)
+
+MariaDB [Week6DB]>
+
+
+
+
+
+
+
