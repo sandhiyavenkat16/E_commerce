@@ -1,0 +1,124 @@
+Microsoft Windows [Version 10.0.26200.7171]
+(c) Microsoft Corporation. All rights reserved.
+
+D:\xampp\mysql\bin>mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 9
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> CREATE DATABASE Week5DB;
+Query OK, 1 row affected (0.003 sec)
+
+MariaDB [(none)]> Bye
+Ctrl-C -- exit!
+
+D:\xampp\mysql\bin>USE Week5DB;
+'USE' is not recognized as an internal or external command,
+operable program or batch file.
+
+D:\xampp\mysql\bin>mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 10
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> CREATE DATABASE Week5DBS;
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [(none)]> USE Week5DBS;
+Database changed
+MariaDB [Week5DBS]> CREATE TABLE Orders_Unnormalized (OrderID INT, CustomerName VARCHAR(50),Products VARCHAR(100));
+Query OK, 0 rows affected (0.023 sec)
+
+MariaDB [Week5DBS]> INSERT INTO Orders_Unnormalized VALUES (101, 'Ravi', 'Laptop, Mouse'),(102, 'Arun', 'Keyboard');
+Query OK, 2 rows affected (0.005 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [Week5DBS]> SELECT * FROM Orders_Unnormalized;
++---------+--------------+---------------+
+| OrderID | CustomerName | Products      |
++---------+--------------+---------------+
+|     101 | Ravi         | Laptop, Mouse |
+|     102 | Arun         | Keyboard      |
++---------+--------------+---------------+
+2 rows in set (0.001 sec)
+
+MariaDB [Week5DBS]> CREATE TABLE Orders_1NF (OrderID INT, CustomerName VARCHAR(50), Product VARCHAR(50));
+Query OK, 0 rows affected (0.013 sec)
+
+MariaDB [Week5DBS]> INSERT INTO Orders_1NF VALUES(101, 'Ravi', 'Laptop'),(101, 'Ravi', 'Mouse'),(102, 'Arun', 'Keyboard');
+Query OK, 3 rows affected (0.007 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [Week5DBS]> SELECT * FROM Orders_1NF;
++---------+--------------+----------+
+| OrderID | CustomerName | Product  |
++---------+--------------+----------+
+|     101 | Ravi         | Laptop   |
+|     101 | Ravi         | Mouse    |
+|     102 | Arun         | Keyboard |
++---------+--------------+----------+
+3 rows in set (0.000 sec)
+
+MariaDB [Week5DBS]> CREATE TABLE Customer ( OrderID INT,CustomerName VARCHAR(50));
+Query OK, 0 rows affected (0.013 sec)
+
+MariaDB [Week5DBS]> CREATE TABLE OrderDetails ( OrderID INT,Product VARCHAR(50));
+Query OK, 0 rows affected (0.018 sec)
+
+MariaDB [Week5DBS]> INSERT INTO Customer VALUES(101, 'Ravi'),(102, 'Arun');
+Query OK, 2 rows affected (0.007 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [Week5DBS]> INSERT INTO OrderDetails VALUES(101, 'Laptop'),(101, 'Mouse'),(102, 'Keyboard');
+Query OK, 3 rows affected (0.008 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [Week5DBS]> SELECT * FROM Customer;
++---------+--------------+
+| OrderID | CustomerName |
++---------+--------------+
+|     101 | Ravi         |
+|     102 | Arun         |
++---------+--------------+
+2 rows in set (0.001 sec)
+
+MariaDB [Week5DBS]> SELECT * FROM OrderDetails;
++---------+----------+
+| OrderID | Product  |
++---------+----------+
+|     101 | Laptop   |
+|     101 | Mouse    |
+|     102 | Keyboard |
++---------+----------+
+3 rows in set (0.001 sec)
+
+MariaDB [Week5DBS]> SELECT  C.OrderID, C.CustomerName,O.Product FROM Customer C JOIN OrderDetails O ON C.OrderID = O.OrderID;
++---------+--------------+----------+
+| OrderID | CustomerName | Product  |
++---------+--------------+----------+
+|     101 | Ravi         | Laptop   |
+|     101 | Ravi         | Mouse    |
+|     102 | Arun         | Keyboard |
++---------+--------------+----------+
+3 rows in set (0.001 sec)
+
+MariaDB [Week5DBS]> SELECT  C.OrderID,C.CustomerName,  O.Product FROM Customer C JOIN OrderDetails O ON C.OrderID = O.OrderID;
++---------+--------------+----------+
+| OrderID | CustomerName | Product  |
++---------+--------------+----------+
+|     101 | Ravi         | Laptop   |
+|     101 | Ravi         | Mouse    |
+|     102 | Arun         | Keyboard |
++---------+--------------+----------+
+3 rows in set (0.001 sec)
+
+MariaDB [Week5DBS]>
+
